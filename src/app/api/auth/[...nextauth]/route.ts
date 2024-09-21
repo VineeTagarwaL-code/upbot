@@ -1,7 +1,6 @@
 import NextAuth, { SessionStrategy } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import axios from "axios";
-import { headers } from "next/headers";
 const handler = NextAuth({
   providers: [
     GoogleProvider({

@@ -29,7 +29,7 @@ export const Features = () => {
             <h3 className="text-xl font-bold mb-2">Set Your Intervals</h3>
             <p className="text-gray-400">
               Choose how often you want us to ping your server. Every minute?
-              Every hour? We're flexible!
+              Every hour? We&apos;re flexible!
             </p>
           </motion.div>
           <motion.div
@@ -41,7 +41,7 @@ export const Features = () => {
             <div className="mb-4 p-2 bg-white/10 rounded-full">
               <Coffee className="h-6 w-6 text-white" />
             </div>
-            <h3 className="text-xl font-bold mb-2">We Keep 'Em Awake</h3>
+            <h3 className="text-xl font-bold mb-2">We Keep &apos;Em Awake</h3>
             <p className="text-gray-400">
               Our bots will gently nudge your servers to keep them from dozing
               off. No coffee required!

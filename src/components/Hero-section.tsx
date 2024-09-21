@@ -22,8 +22,8 @@ export const Hero = () => {
             Wake Up Your Sleepy Servers!
           </h1>
           <p className="mx-auto max-w-[700px] text-gray-300 md:text-xl lg:text-2xl">
-            UpBot: Because even servers need a good poke now and then. We'll
-            keep your cold starts hot and your downtime down.
+            UpBot: Because even servers need a good poke now and then.
+            We&apos;ll keep your cold starts hot and your downtime down.
           </p>
         </motion.div>
         <motion.div
