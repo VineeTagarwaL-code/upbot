@@ -5,7 +5,7 @@ export const Hero = () => {
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 relative select-none">
       <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
-      <div className="absolute inset-0 bg-black/50" />{" "}
+      <div className="absolute inset-0" />{" "}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
