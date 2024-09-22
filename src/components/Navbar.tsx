@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Github, Zap } from "lucide-react";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Navlogin } from "./Navlogin";
 import { useState } from "react";
@@ -42,7 +41,6 @@ const MenuIcon = () => (
 );
 
 export const Navbar = () => {
-  const { data: session } = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);

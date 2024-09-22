@@ -15,7 +15,6 @@ export const authOptions = {
     async jwt({ token, account, user }: any) {
       if (account && user) {
         try {
-          console.log(account, user);
           const response = await axios.get(
             `${process.env.BACKEND_URL}/api/auth/google`,
             {
