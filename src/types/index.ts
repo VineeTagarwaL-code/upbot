@@ -5,6 +5,7 @@ type PingLog = {
 };
 
 type PingTask = {
+  id: number;
   url: string;
   isActive: boolean;
   logs: PingLog[];

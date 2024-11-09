@@ -38,35 +38,12 @@ export const Navlogin = () => {
   if (!session || !session.user) return null;
 
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger asChild>
-        <div className="p-0 cursor-pointer">
-          <Image
-            src={session.user.image || "/avatar.png"}
-            alt="User profile picture"
-            width={40}
-            height={40}
-            className="rounded-full"
-          />
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align="end"
-        className="w-fit backdrop-blur-lg text-white z-[999999999] border-[1px] border-gray-800 border-solid bg-transparent bg-gradient-to-tr from-zinc-300/5 via-gray-400/5  to-transparent shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]"
-      >
-        <DropdownMenuItem className="hover:bg-none text-gray-400 hover:text-white cursor-pointer">
-          <Link href="/dashboard">Dashboard</Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          className="hover:bg-none text-gray-400 hover:text-white cursor-pointer"
-          onSelect={(event) => {
-            event.preventDefault();
-            signOut();
-          }}
-        >
-          Logout
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Image
+      src={session.user.image || "/avatar.png"}
+      alt="User profile picture"
+      width={40}
+      height={40}
+      className="rounded-full"
+    />
   );
 };

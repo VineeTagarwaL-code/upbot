@@ -1,86 +1,80 @@
 "use client";
-import { useState, useEffect } from "react";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
-import { CalendarIcon } from "lucide-react";
 
+import { motion } from "framer-motion";
+import { TaskContainer } from "@/components/TaskContainer";
+import { LogOut, PlusIcon } from "lucide-react";
+import { signOut } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { SectionWrapper } from "@/components/Section-wrapper";
-import { getPings, addTasks } from "@/app/actions/task";
-import { TaskContainer } from "@/components/Task";
-import { useToast } from "@/hooks/use-toast";
 import AddTaskForm from "@/components/forms/addTask";
-import { PingTask } from "@/types";
+import SheetWrapper from "@/components/wrappers/sheetWrapper";
+import React from "react";
 
-const TaskSkeleton = () => {
-  return (
-    <div className="animate-pulse bg-[#121213] rounded-lg shadow p-4"></div>
-  );
-};
-
-const Page = () => {
-  const [tasks, setTasks] = useState<PingTask[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  async function getUserTasks() {
-    try {
-      const response = await getPings();
-      if (!response) {
-        throw new Error("Failed to fetch tasks");
-      }
-      console.log(response.additional.pings);
-      setLoading(false);
-    } catch (err) {
-      console.log(err);
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    getUserTasks();
-  }, []);
-
+export default function Dashboard() {
   return (
     <SectionWrapper>
-      <div className="flex flex-col min-h-screen">
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <div className="mb-6">
-            <div className="flex justify-between items-center mb-6">
-              <h1 className="text-2xl font-bold">Dashboard</h1>
-              <AddTaskForm open={isModalOpen} onOpenChange={setIsModalOpen} />
-            </div>
-            {loading ? (
-              <div className="flex flex-col w-[70%] mx-auto gap-4">
-                <TaskSkeleton />
-                <TaskSkeleton />
-                <TaskSkeleton />
-              </div>
-            ) : tasks.length === 0 ? (
-              <div className="text-center p-12 bg-stone-900/20 rounded-lg border-2 border-dashed border-gray-700">
-                <CalendarIcon className="mx-auto h-12 w-12 text-gray-500" />
-                <h3 className="mt-2 text-sm font-medium text-white">
-                  No tasks scheduled
-                </h3>
-                <p className="mt-1 text-sm text-gray-400">
-                  Get started by creating a new task.
-                </p>
-              </div>
-            ) : (
-              <div className="flex flex-col w-[70%] mx-auto gap-4">
-                {tasks.map((task, index) => (
-                  <div key={index} className=" bg-[#121213] rounded-lg shadow">
-                    <TaskContainer task={task} />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </main>
-
-        <Footer />
+      <div className="flex-grow flex flex-col min-h-screen bg-[#0E0C0A] text-white w-full">
+        <div className="container mx-auto flex flex-col min-h-screen w-full">
+          <section className="w-full py-2 md:py-24 lg:py-32 xl:py-38 relative select-none flex flex-col gap-20">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="flex flex-col items-center text-center space-y-8"
+            >
+              <DashboardHeader />
+              <TaskContainer />
+            </motion.div>
+          </section>
+        </div>
       </div>
     </SectionWrapper>
   );
-};
+}
 
-export default Page;
+const DashboardHeader = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  return (
+    <div className="flex w-[80%] justify-between items-center">
+      <h1 className="text-4xl font-bold">Dashboard</h1>
+      <div className="flex justify-center items-center gap-3">
+        <Button
+          variant="destructive"
+          onClick={() => signOut()}
+          className="flex items-center gap-2"
+        >
+          <LogOut size={24} />
+          <span>Log Out</span>
+        </Button>
+        <Button
+          variant="default"
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex items-center gap-2"
+        >
+          <PlusIcon size={24} />
+          <span>Add task</span>
+        </Button>
+        <SheetWrapper
+          title="Add Task"
+          description="Add a new task to monitor"
+          isOpen={isOpen}
+          handleClose={() => setIsOpen(false)}
+        >
+          <AddTaskForm />
+        </SheetWrapper>
+      </div>
+    </div>
+  );
+};

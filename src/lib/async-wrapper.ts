@@ -1,5 +1,5 @@
 import { standardizeApiError } from "./error";
-type withServerActionAsyncCatcherType<T, R> = (args?: T) => Promise<R>;
+export type withServerActionAsyncCatcherType<T, R> = (args?: T) => Promise<R>;
 
 function withServerActionAsyncCatcher<T, R>(
   serverAction: withServerActionAsyncCatcherType<T, R>

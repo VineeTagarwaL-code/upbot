@@ -19,7 +19,7 @@ export const authOptions = {
 
         try {
           const response = await axios.get(
-            `${process.env.BACKEND_URL}/api/auth/google`,
+            `${process.env.BACKEND_URL}/auth/google`,
             {
               headers: {
                 Authorization: `Bearer ${token.accessToken}`,

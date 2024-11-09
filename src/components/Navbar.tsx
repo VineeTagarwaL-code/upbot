@@ -7,9 +7,11 @@ import {
   motion,
 } from "framer-motion";
 import { Zap } from "lucide-react";
-import { Children, useRef, useState } from "react";
-import { Navlogin } from "./Navlogin";
+import { useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { Navlogin } from "./Navlogin";
 
 export const Navbar = () => {
   const { scrollYProgress } = useScroll();
@@ -54,6 +56,7 @@ type Position = {
   opacity: number;
 };
 const SlideNavTabs = () => {
+  const { data: session, status } = useSession();
   const [position, setPosition] = useState<Position>({
     left: 0,
     width: 0,
@@ -79,7 +82,9 @@ const SlideNavTabs = () => {
           </Link>
         ))}
         <Tab setPosition={setPosition}>
-          <Navlogin />
+          <Link href={"/dashboard"}>
+            <Navlogin />
+          </Link>
         </Tab>
         <Cursor position={position} />
       </ul>

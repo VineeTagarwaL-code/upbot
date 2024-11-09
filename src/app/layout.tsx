@@ -30,16 +30,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased   min-h-screen flex  bg-background font-sans  max-w-7xl mx-auto px-6 `}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable}  `}>
         <Providers>
           <ThemeProvider>
             <Navbar />
-            <div className="flex flex-col min-h-screen">
-              <main className="flex-grow">{children}</main>
-              <Footer />
-            </div>
+
+            {children}
+            <Footer />
           </ThemeProvider>
           <Toaster />
         </Providers>
