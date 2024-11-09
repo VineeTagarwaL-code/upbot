@@ -26,8 +26,8 @@ export const Navlogin = () => {
   if (status === "unauthenticated") {
     return (
       <Button
-        variant="outline"
-        className="text-white border-white hover:bg-white hover:text-black transition-colors"
+        variant={"default"}
+        className="text-white bg-transparent hover:bg-transparent px-0"
         onClick={() => signIn("google")}
       >
         Login
@@ -52,19 +52,17 @@ export const Navlogin = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="w-56 bg-stone-900 text-white border-none"
+        className="w-fit backdrop-blur-lg text-white z-[999999999] border-[1px] border-gray-800 border-solid bg-transparent bg-gradient-to-tr from-zinc-300/5 via-gray-400/5  to-transparent shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]"
       >
-        <DropdownMenuItem asChild>
-          <Link href="/dashboard" className="cursor-pointer">
-            Dashboard
-          </Link>
+        <DropdownMenuItem className="hover:bg-none text-gray-400 hover:text-white cursor-pointer">
+          <Link href="/dashboard">Dashboard</Link>
         </DropdownMenuItem>
         <DropdownMenuItem
+          className="hover:bg-none text-gray-400 hover:text-white cursor-pointer"
           onSelect={(event) => {
             event.preventDefault();
             signOut();
           }}
-          className="cursor-pointer"
         >
           Logout
         </DropdownMenuItem>

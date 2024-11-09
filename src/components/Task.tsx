@@ -1,15 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Task, TaskLog } from "@/types";
+import { PingTask, PingLog } from "@/types";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { CalendarIcon, Globe, Trash, TrashIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { deleteTasks } from "@/app/actions/task";
+import { cn } from "@/lib/utils";
 // Expandable TaskContainer component
-const TaskContainer = ({ task }: { task: Task }) => {
+const TaskContainer = ({ task }: { task: PingTask }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpand = () => {
@@ -68,24 +69,12 @@ const TaskContainer = ({ task }: { task: Task }) => {
           <div className="space-y-4">
             {task.logs.length > 0 ? (
               <div className="bg-black/20 px-4 py-5 rounded-lg">
-                {task.logs.map((log: TaskLog, index) => {
+                {task.logs.map((log: PingLog, index) => {
                   return (
                     <div
                       className="mb-2 flex justify-start items-center gap-4"
                       key={index}
-                    >
-                      {" "}
-                      <p className="text-green-400">
-                        {" "}
-                        [ {new Date(log.createdAt).toLocaleString()} ]
-                      </p>
-                      <span>-</span>
-                      <p className="text-muted-foreground">
-                        {log.responseMessage?.slice(0, 20) || "No message"}
-                      </p>
-                      <span>-</span>
-                      <p>Status: {log.responseStatus}</p>
-                    </div>
+                    ></div>
                   );
                 })}
               </div>

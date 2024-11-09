@@ -1,19 +1,18 @@
-type TaskLog = {
-  status: "success" | "failure";
-  responseMessage?: string;
-  responseTime?: number;
-  responseStatus?: number;
-  createdAt: Date;
+type PingLog = {
+  time: string;
+  logResponse: string;
+  isSuccess: boolean;
 };
 
-type Task = {
-  userId: string;
+type PingTask = {
   url: string;
-  interval: number;
   isActive: boolean;
-  createdAt: Date;
-  logs: TaskLog[];
-  lastPingedAt?: Date;
+  logs: PingLog[];
 };
 
-export type { TaskLog, Task };
+type TAxiosResponse<T = unknown> = {
+  message: string;
+  additional: T;
+};
+
+export type { PingLog, PingTask, TAxiosResponse };

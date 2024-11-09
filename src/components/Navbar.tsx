@@ -1,96 +1,133 @@
-import { Button } from "@/components/ui/button";
-import { Github, Zap } from "lucide-react";
-import Link from "next/link";
+"use client";
+import { NAVBAR } from "@/constants/constants";
+import {
+  AnimatePresence,
+  useMotionValueEvent,
+  useScroll,
+  motion,
+} from "framer-motion";
+import { Zap } from "lucide-react";
+import { Children, useRef, useState } from "react";
 import { Navlogin } from "./Navlogin";
-import { useState } from "react";
-
-// NavItem component to reuse for each link
-const NavItem = ({
-  href,
-  children,
-  ...props
-}: {
-  href: string;
-  children: React.ReactNode;
-  [key: string]: any;
-}) => (
-  <Link
-    className="text-sm font-medium hover:text-gray-300 transition-colors"
-    href={href}
-    {...props}
-  >
-    {children}
-  </Link>
-);
-
-const MenuIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className="w-6 h-6"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-    />
-  </svg>
-);
+import Link from "next/link";
 
 export const Navbar = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const { scrollYProgress } = useScroll();
+  const [visible, setVisible] = useState(true);
 
-  const toggleMenu = () => setMenuOpen(!menuOpen);
-
+  useMotionValueEvent(scrollYProgress, "change", (current) => {
+    if (typeof current === "number") {
+      const direction = current - scrollYProgress.getPrevious()!;
+      if (direction < 0 && !visible) {
+        setVisible(true);
+      } else if (direction > 0 && visible) {
+        setVisible(false);
+      }
+    }
+  });
   return (
-    <>
-      <nav className="flex items-center justify-between py-6">
-        <Link className="flex items-center justify-center" href="#">
-          <Zap className="h-6 w-6 text-white" />
-          <span className="ml-2 text-2xl font-bold">UpBot</span>
-        </Link>
+    <AnimatePresence mode="wait">
+      <motion.nav
+        initial={{
+          y: -150,
+          opacity: 1,
+        }}
+        animate={{
+          y: visible ? -50 : -100,
+          opacity: visible ? 1 : 0,
+        }}
+        transition={{
+          duration: 0.2,
+          ease: "easeOut",
+        }}
+        className="fixed z-[99999]  inset-x-0 mt-12 hidden w-full px-24 text-sm md:flex"
+      >
+        <SlideNavTabs></SlideNavTabs>
+      </motion.nav>
+    </AnimatePresence>
+  );
+};
 
-        <div className="hidden md:flex items-center space-x-6">
-          <NavItem href="#">Features</NavItem>
-          <NavItem href="#">About</NavItem>
-          <NavItem
-            href="https://github.com/vineetagarwal-code/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Github className="h-5 w-5 mr-1" />
-          </NavItem>
+type Position = {
+  left: number;
+  width: number;
+  opacity: number;
+};
+const SlideNavTabs = () => {
+  const [position, setPosition] = useState<Position>({
+    left: 0,
+    width: 0,
+    opacity: 1,
+  });
+  return (
+    <div className="fixed right-0 left-0 top-5 z-30 mx-auto text-white bg-transparent">
+      <ul
+        onMouseLeave={() => {
+          setPosition((prev) => ({
+            ...prev,
+            opacity: 0,
+          }));
+        }}
+        className="flex relative items-center py-3 px-5 mx-auto text-sm text-gray-200 bg-gradient-to-tr to-transparent rounded-full border-2 w-fit border-white/5 from-zinc-300/5 via-gray-400/5 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] backdrop-blur-lg backdrop-filter"
+      >
+        <Tab setPosition={setPosition}>
+          <Zap className="h-6 w-6 text-gray-500 hover:text-white transition-all" />
+        </Tab>
+        {NAVBAR.map((tab, index) => (
+          <Link key={index} href={tab.link}>
+            <Tab setPosition={setPosition}>{tab.title}</Tab>
+          </Link>
+        ))}
+        <Tab setPosition={setPosition}>
           <Navlogin />
-        </div>
+        </Tab>
+        <Cursor position={position} />
+      </ul>
+    </div>
+  );
+};
+const Tab = ({
+  children,
+  setPosition,
+}: {
+  children: React.ReactNode;
+  setPosition: ({
+    left,
+    width,
+    opacity,
+  }: {
+    left: number;
+    width: number;
+    opacity: number;
+  }) => void;
+}) => {
+  const ref = useRef<HTMLLIElement>(null);
+  return (
+    <li
+      ref={ref}
+      onMouseEnter={() => {
+        if (!ref?.current) return;
+        const { width } = ref.current.getBoundingClientRect();
+        setPosition({
+          left: ref.current.offsetLeft,
+          width,
+          opacity: 1,
+        });
+      }}
+      className="block font-semibold relative z-10 py-2.5 px-3 text-xs text-gray-200 hover:text-white cursor-pointer md:py-2 md:px-5 md:text-base mix-blend-difference"
+    >
+      {children}
+    </li>
+  );
+};
 
-        <Button
-          className="md:hidden"
-          variant="outline"
-          size="icon"
-          onClick={toggleMenu}
-        >
-          <MenuIcon />
-        </Button>
-      </nav>
-
-      {menuOpen && (
-        <div className="md:hidden mt-4 space-y-4">
-          <NavItem href="#">Features</NavItem>
-          <NavItem href="#">About</NavItem>
-          <NavItem
-            href="https://github.com/vineetagarwal-code/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Github className="h-5 w-5 inline-block mr-1" />
-            <span>1k</span>
-          </NavItem>
-          <Navlogin />
-        </div>
-      )}
-    </>
+const Cursor = ({ position }: { position: Position }) => {
+  return (
+    <motion.li
+      animate={{
+        ...position,
+      }}
+      className="absolute z-0 h-7 bg-glass-gradient bg-transparent rounded-full md:h-10  shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)] backdrop-blur-lg backdrop-filter"
+    />
   );
 };
