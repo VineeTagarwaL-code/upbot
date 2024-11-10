@@ -43,7 +43,7 @@ async function deleteTasks(url: string) {
 }
 type AddTaskArgs = {
   url: string;
-  webHook?: string;
+  discordUrl?: string;
 };
 
 type AddTaskResponse = {
@@ -64,7 +64,7 @@ const addTasks = withServerActionAsyncCatcher<
       `${process.env.BACKEND_URL}/ping/create`,
       {
         url: data.url,
-        ...(data.webHook && { webHook: data.webHook }),
+        ...(data.discordUrl && { webHook: data.discordUrl }),
       },
       {
         headers: {
@@ -84,4 +84,35 @@ const addTasks = withServerActionAsyncCatcher<
   }
 });
 
-export { getPings, addTasks, deleteTasks };
+const reactivateTask = async ({ taskId }: { taskId: number }) => {
+  try {
+    const user = await getUser();
+    console.log(user, taskId);
+    if (!user || !taskId) {
+      throw new Error("Failed to add task");
+    }
+    console.log(taskId);
+    const response = await axios.patch(
+      `${process.env.BACKEND_URL}/ping/reactivate`,
+      {
+        taskId: taskId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
+
+    const res = new SuccessResponse(
+      "Task reactivated successfully",
+      200,
+      response.data
+    );
+    return res.serialize();
+  } catch (err: any) {
+    console.log(err);
+  }
+};
+
+export { getPings, addTasks, deleteTasks, reactivateTask };

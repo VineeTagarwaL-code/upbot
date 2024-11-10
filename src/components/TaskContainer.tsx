@@ -26,7 +26,7 @@ export const TaskContainer = () => {
     return <p>Failed to fetch tasks</p>;
   }
   return (
-    <div className="w-[80%]">
+    <div className="w-[80%] flex justify-center items-start flex-col gap-3">
       {data?.additional.pings.map((task: PingTask) => {
         return <TaskCard key={task.id} Task={task} />;
       })}

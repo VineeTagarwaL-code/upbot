@@ -2,10 +2,12 @@ type PingLog = {
   time: string;
   logResponse: string;
   isSuccess: boolean;
+  timeTake: number;
+  respCode: number;
 };
 
 type PingTask = {
-  id: number;
+  ID: number;
   url: string;
   isActive: boolean;
   logs: PingLog[];

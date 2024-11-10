@@ -1,75 +1,155 @@
 "use client";
 
 import { useState } from "react";
-import { Trash2, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  Trash2,
+  ChevronDown,
+  ChevronUp,
+  Menu,
+  Plus,
+  LogOut,
+  Eye,
+  Delete,
+  Trash2Icon,
+  EyeClosed,
+  EyeClosedIcon,
+  EyeOffIcon,
+  Loader2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+
 import { PingTask } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
-import { GetLastPingTime, formatTime } from "@/lib/utils";
+import { GetLastPingTime, cn, formatTime } from "@/lib/utils";
+import Link from "next/link";
 
-const mockChartData = [
-  { name: "10:00", responseTime: 200 },
-  { name: "10:05", responseTime: 180 },
-  { name: "10:10", responseTime: 220 },
-  { name: "10:15", responseTime: 190 },
-  { name: "10:20", responseTime: 200 },
-  { name: "10:25", responseTime: 180 },
-  { name: "10:30", responseTime: 220 },
-  { name: "10:35", responseTime: 190 },
-];
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LoopIcon } from "@radix-ui/react-icons";
+import { reactivateTask } from "@/app/actions/task";
+import { useToast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function TaskCard({ Task }: { Task: PingTask }) {
-  const [selectedTask, setSelectedTask] = useState<any>(null);
-
+  const [selectedTask, setSelectedTask] = useState<PingTask | null>(null);
+  const [isReactivating, setIsReactivating] = useState<boolean>(false);
   const toggleTaskDetails = (task: PingTask) => {
-    setSelectedTask(selectedTask && selectedTask.id === task.id ? null : task);
+    setSelectedTask(selectedTask && selectedTask.ID === task.ID ? null : task);
   };
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const ReactivateTask = async (Task: PingTask) => {
+    try {
+      setIsReactivating(true);
+      const response = await reactivateTask({ taskId: Task.ID });
 
+      if (response) {
+        toast({
+          title: "Task reactivated successfully",
+          description: "Task will now start pinging",
+        });
+        await queryClient.invalidateQueries({ queryKey: ["pingTask"] });
+      }
+    } catch (err) {
+      toast({
+        title: "Failed to reactivate task",
+        description: "Please try again later",
+      });
+    } finally {
+      setIsReactivating(false);
+    }
+  };
   return (
     <div className="container mx-auto">
       <div className="space-y-4">
-        <Card key={Task.id}>
+        <Card key={Task.ID}>
           <CardContent className="p-4">
             <div className="flex justify-between items-center">
               <div className="flex flex-col items-start">
-                <h3 className="text-lg font-semibold">{Task.url}</h3>
+                <h3 className="text-lg font-semibold text-blue-200 text-left ">
+                  <Link href={Task.url}>
+                    {new URL(Task.url).hostname + new URL(Task.url).pathname}
+                  </Link>
+                </h3>
                 <p className="text-md text-gray-500">
                   Last ping: {GetLastPingTime(Task)}
                 </p>
               </div>
-              <div className="flex space-x-2 items-center">
-                <div
-                  className={`h-3 w-3 rounded-full mr-3 ${
-                    Task.isActive ? "bg-green-500" : "bg-red-500"
-                  }`}
-                ></div>
-                <Button
-                  variant="default"
-                  onClick={() => toggleTaskDetails(Task)}
-                >
-                  {selectedTask && selectedTask.id === Task.id ? (
-                    <ChevronUp />
-                  ) : (
-                    <ChevronDown />
+              <div className="">
+                <div className="hidden md:flex space-x-2 items-center">
+                  <div
+                    className={`h-3 w-3 rounded-full mr-3 ${
+                      Task.isActive ? "bg-green-500" : "bg-red-500"
+                    }`}
+                  ></div>
+
+                  {!Task.isActive && (
+                    <Button
+                      variant="default"
+                      className="hover:bg-green-800"
+                      onClick={() => ReactivateTask(Task)}
+                    >
+                      {isReactivating ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <>
+                          <LoopIcon className="h-4 w-4" />
+                          Reactivate
+                        </>
+                      )}
+                    </Button>
                   )}
-                </Button>
-                <Button variant="default" className="hover:bg-red-400">
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+
+                  <Button
+                    variant="default"
+                    onClick={() => toggleTaskDetails(Task)}
+                  >
+                    {selectedTask && selectedTask.ID === Task.ID ? (
+                      <ChevronUp />
+                    ) : (
+                      <ChevronDown />
+                    )}
+                  </Button>
+                  <Button variant="default" className="hover:bg-red-400">
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="icon" className="md:hidden">
+                      <Menu className="h-5 w-5" />
+                      <span className="sr-only">Open menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onSelect={() => toggleTaskDetails(Task)}>
+                      {selectedTask && selectedTask.ID === Task.ID ? (
+                        <>
+                          <EyeOffIcon className="mr-2 h-4 w-4" />
+                          Close Logs
+                        </>
+                      ) : (
+                        <>
+                          <Eye className="mr-2 h-4 w-4" />
+                          View Logs
+                        </>
+                      )}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Trash2Icon className="mr-2 h-4 w-4" />
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
             <AnimatePresence>
-              {selectedTask && selectedTask.id === Task.id && (
+              {selectedTask && selectedTask.ID === Task.ID && (
                 <motion.div
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
@@ -84,39 +164,23 @@ export function TaskCard({ Task }: { Task: PingTask }) {
                         No logs available
                       </p>
                     ) : (
-                      <ul className="space-y-2 bg-black/40 w-full flex flex-col gap-0 px-2 py-3 rounded-xl">
+                      <ul className="space-y-2 bg-black/40 w-full flex flex-col justify-center items-start gap-0 px-2 py-3 rounded-xl">
                         {Task.logs.map((log, index) => (
                           <li
                             key={index}
-                            className="text-sm text-foreground/40"
+                            className={cn(
+                              "text-sm text-foreground/40 text-left",
+                              log.isSuccess ? "text-green-500" : "text-red-300"
+                            )}
                           >
                             <span className="font-medium">
                               {formatTime(log.time)}{" "}
                             </span>
-                            -- {log.logResponse}
+                            -- {log.logResponse} -- {log.respCode}
                           </li>
                         ))}
                       </ul>
                     )}
-                    <h4 className="font-semibold mt-4 mb-4 text-2xl">
-                      Response Time Graph
-                    </h4>
-                  </div>
-                  <div className="h-64 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={mockChartData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Line
-                          className="text-black"
-                          type="monotone"
-                          dataKey="responseTime"
-                          stroke="#8884d8"
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
                   </div>
                 </motion.div>
               )}

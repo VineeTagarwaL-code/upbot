@@ -68,7 +68,7 @@ export default function AddTaskForm() {
   async function handleSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
-
+      console.log(values);
       const addTaskRes = await addTasks(values);
       if (!addTaskRes.status) {
         throw new Error(addTaskRes.message);
