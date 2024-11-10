@@ -4,15 +4,15 @@ type NavbarType = {
 }[];
 export const NAVBAR: NavbarType = [
   {
-    link: "https://upbot.vercel.app/",
+    link: "https://upbot.vineet.tech/",
     title: "Home",
   },
   {
-    link: "https://upbot.vercel.app/",
+    link: "https://upbot.vineet.tech/#features",
     title: "Features",
   },
   {
-    link: "https://upbot.vercel.app/",
+    link: "https://github.com/vineetagarwal-code/upbot",
     title: "Github",
   },
 ];

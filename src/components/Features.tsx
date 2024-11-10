@@ -39,7 +39,7 @@ export default function Features() {
   ];
 
   return (
-    <div className=" p-6 md:p-12">
+    <div className=" p-6 md:p-12" id="features">
       {" "}
       <p className="text-3xl lg:text-5xl text-white font-semibold capitalize mb-10 ">
         What we offer
