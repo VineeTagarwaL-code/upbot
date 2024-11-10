@@ -23,14 +23,12 @@ export const formatTime = (time: string): string => {
 };
 
 export function convertTo24HourFormat(time: string) {
-  // Parse the full ISO 8601 string with timezone offset
   const date = new Date(time);
 
   const hours = date.getHours();
   const minutes = date.getMinutes();
 
-  // Return the time in 24-hour format
-  return `${hours.toString().padStart(2, "0")}-${minutes
+  return `${hours.toString().padStart(2, "0")}:${minutes
     .toString()
     .padStart(2, "0")}`;
 }

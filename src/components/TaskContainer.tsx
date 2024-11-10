@@ -14,7 +14,7 @@ export const TaskContainer = () => {
 
   if (isLoading) {
     return (
-      <div className="space-y-4 w-[80%]">
+      <div className="space-y-4 w-full md:w-[80%]">
         {Array(5)
           .fill(0)
           .map((_, index) => (
@@ -29,7 +29,7 @@ export const TaskContainer = () => {
 
   if (data?.additional.pings.length === 0) {
     return (
-      <Card className="w-[80%] mx-auto">
+      <Card className="w-full md:w-[80%] mx-auto">
         <CardContent className="flex flex-col items-center justify-center p-6 text-center">
           <ArrowUpCircle className="w-12 h-12 mb-4 text-muted-foreground" />
           <h3 className="text-lg font-semibold mb-2">No tasks yet</h3>
@@ -46,7 +46,7 @@ export const TaskContainer = () => {
     return <p>Failed to fetch tasks</p>;
   }
   return (
-    <div className="w-[80%] flex justify-center items-start flex-col gap-3">
+    <div className="w-full md:w-[80%] flex justify-center items-start flex-col gap-3">
       {data?.additional.pings.map((task: PingTask) => {
         return <TaskCard key={task.ID} Task={task} />;
       })}

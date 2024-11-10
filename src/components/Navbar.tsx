@@ -6,11 +6,31 @@ import {
   useScroll,
   motion,
 } from "framer-motion";
-import { Zap } from "lucide-react";
+import { House, Logs, Zap, ZapIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { Navlogin } from "./Navlogin";
+import { cn } from "@/lib/utils";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
+
+const NavbarData = [
+  {
+    label: "Home",
+    link: "/",
+    icon: <House />,
+  },
+  {
+    label: "GitHub",
+    link: "https://github.com/vineetagarwal-code/upbot",
+    icon: <GitHubLogoIcon />,
+  },
+  {
+    label: "Dashboard",
+    link: "/dashboard",
+    icon: <Logs />,
+  },
+];
 
 export const Navbar = () => {
   const { scrollYProgress } = useScroll();
@@ -27,25 +47,97 @@ export const Navbar = () => {
     }
   });
   return (
-    <AnimatePresence mode="wait">
-      <motion.nav
-        initial={{
-          y: -150,
-          opacity: 1,
-        }}
-        animate={{
-          y: visible ? -50 : -100,
-          opacity: visible ? 1 : 0,
-        }}
-        transition={{
-          duration: 0.2,
-          ease: "easeOut",
-        }}
-        className="fixed z-[99999]  inset-x-0 mt-12 hidden w-full px-24 text-sm md:flex"
+    <>
+      <DockMobile
+        NavbarData={NavbarData}
+        mobileClassName="rounded-full z-50 cursor-pointer md:flex  items-center  pointer-events-auto bg-background [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_-2px_4px_rgba(0,0,0,.05),0_-12px_24px_rgba(0,0,0,.05)] transform-gpu dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_20px_80px_-20px_#ffffff1f_inset] "
+      />
+      <AnimatePresence mode="wait">
+        <motion.nav
+          initial={{
+            y: -150,
+            opacity: 1,
+          }}
+          animate={{
+            y: visible ? -50 : -100,
+            opacity: visible ? 1 : 0,
+          }}
+          transition={{
+            duration: 0.2,
+            ease: "easeOut",
+          }}
+          className="fixed z-[99999]  inset-x-0 mt-12 hidden w-full px-24 text-sm md:flex"
+        >
+          <SlideNavTabs />
+        </motion.nav>
+      </AnimatePresence>
+    </>
+  );
+};
+
+const DockMobile = ({ mobileClassName, NavbarData }: any) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="flex md:hidden fixed bottom-3 right-5 z-90 mx-auto origin-bottom h-full max-h-14 z-[999999999]">
+      <AnimatePresence>
+        {open && (
+          <motion.div className="absolute bottom-full mb-2 inset-x-0 flex flex-col gap-2 items-center z-50">
+            {NavbarData.map((item: any, idx: number) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{
+                  opacity: 0,
+                  y: 10,
+                  transition: { delay: idx * 0.06 },
+                }}
+                transition={{
+                  delay: (NavbarData.length - 1 - idx) * 0.05,
+                }}
+              >
+                <DockIcon
+                  key={idx}
+                  link={item.link}
+                  icon={item.icon}
+                  className="h-10 w-10 cursor-pointer rounded-full bg-neutral-900 flex items-center justify-center"
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <div
+        onClick={() => setOpen(!open)}
+        className={cn(
+          "z-50 flex gap-4 items-end rounded-2xl bg-gray-50 dark:bg-neutral-900 px-4",
+          mobileClassName
+        )}
       >
-        <SlideNavTabs></SlideNavTabs>
-      </motion.nav>
-    </AnimatePresence>
+        <motion.span
+          initial={{ rotate: 0 }}
+          animate={open ? { rotate: 360 } : { rotate: 0 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          className="flex items-center justify-center"
+        >
+          <Zap className=" text-white transition-all" />
+        </motion.span>
+      </div>
+    </div>
+  );
+};
+
+type DockIconProps = {
+  link?: string;
+  icon: React.ReactNode;
+  className?: string;
+};
+const DockIcon = ({ link, icon, className }: DockIconProps) => {
+  return (
+    <motion.div whileHover={{ scale: 1.1 }} className={cn(className)}>
+      <Link href={link!}>{icon}</Link>
+    </motion.div>
   );
 };
 

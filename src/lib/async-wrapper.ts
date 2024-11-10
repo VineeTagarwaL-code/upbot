@@ -8,7 +8,6 @@ function withServerActionAsyncCatcher<T, R>(
     try {
       return await serverAction(args);
     } catch (error) {
-      console.log("Error in withServerActionAsyncCatcher", error);
       return standardizeApiError(error) as R;
     }
   };

@@ -7,10 +7,7 @@ export async function middleware(req: NextRequest) {
 
   const protectedRoute = "/dashboard";
   const getstarted = "/getstarted";
-  console.log(req.nextUrl.pathname);
-  console.log(session);
   if (req.nextUrl.pathname === getstarted && session) {
-    console.log("Redirecting to dashboard");
     return NextResponse.redirect(new URL(protectedRoute, req.url));
   }
   if (req.nextUrl.pathname === protectedRoute && !session) {

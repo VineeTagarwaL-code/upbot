@@ -16,7 +16,12 @@ import { Card, CardContent } from "@/components/ui/card";
 
 import { PingTask } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
-import { GetLastPingTime, cn, formatTime } from "@/lib/utils";
+import {
+  GetLastPingTime,
+  cn,
+  convertTo24HourFormat,
+  formatTime,
+} from "@/lib/utils";
 import Link from "next/link";
 
 import {
@@ -29,6 +34,7 @@ import { LoopIcon } from "@radix-ui/react-icons";
 import { deleteTask, reactivateTask } from "@/app/actions/task";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import { url } from "inspector";
 
 export function TaskCard({ Task }: { Task: PingTask }) {
   const [selectedTask, setSelectedTask] = useState<PingTask | null>(null);
@@ -122,68 +128,98 @@ const TaskHeader = ({
   isDeleting: boolean;
 }) => {
   return (
-    <div className="flex justify-between items-center">
+    <div
+      className="flex justify-between items-center relative"
+      onClick={() => toggleTaskDetails(Task)}
+    >
       <div className="flex flex-col items-start">
         <h3 className="text-lg font-semibold text-blue-200 text-left ">
-          <Link href={Task.url}>
+          <Link href={Task.url} className="hidden md:inline-block">
             {new URL(Task.url).hostname + new URL(Task.url).pathname}
+          </Link>
+          <Link href={Task.url} className="md:hidden">
+            {new URL(Task.url).hostname.length > 20
+              ? new URL(Task.url).hostname.substring(0, 20) + "..."
+              : new URL(Task.url).hostname}
           </Link>
         </h3>
         <p className="text-md text-gray-500">
           Last ping: {GetLastPingTime(Task)}
         </p>
       </div>
-      <div className="">
-        <div className="hidden md:flex space-x-2 items-center">
-          <div
-            className={`h-3 w-3 rounded-full mr-3 ${
-              Task.isActive ? "bg-green-500" : "bg-red-500"
-            }`}
-          ></div>
+      <div className="hidden md:flex space-x-2 items-center">
+        <div
+          className={`h-3 w-3 rounded-full mr-3 ${
+            Task.isActive ? "bg-green-500" : "bg-red-500"
+          }`}
+        ></div>
 
-          {!Task.isActive && (
-            <Button
-              variant="default"
-              className="hover:bg-green-800"
-              onClick={() => ReactivateTask(Task)}
-            >
-              {isReactivating ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <>
-                  <LoopIcon className="h-4 w-4" />
-                  Reactivate
-                </>
-              )}
-            </Button>
-          )}
-
-          <Button variant="default" onClick={() => toggleTaskDetails(Task)}>
-            {selectedTask && selectedTask.ID === Task.ID ? (
-              <ChevronUp />
-            ) : (
-              <ChevronDown />
-            )}
-          </Button>
+        {!Task.isActive && (
           <Button
             variant="default"
-            className="hover:bg-red-400"
-            onClick={() => DeleteTask(Task)}
+            className="hover:bg-green-800"
+            onClick={() => ReactivateTask(Task)}
           >
-            {isDeleting ? (
+            {isReactivating ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              <Trash2 className="h-4 w-4" />
+              <>
+                <LoopIcon className="h-4 w-4" />
+                Reactivate
+              </>
             )}
           </Button>
-        </div>
-        <MobileMenu
-          Task={Task}
-          selectedTask={selectedTask}
-          ReactivateTask={ReactivateTask}
-          toggleTaskDetails={toggleTaskDetails}
-          DeleteTask={DeleteTask}
-        />
+        )}
+
+        <Button variant="default" onClick={() => toggleTaskDetails(Task)}>
+          {selectedTask && selectedTask.ID === Task.ID ? (
+            <ChevronUp />
+          ) : (
+            <ChevronDown />
+          )}
+        </Button>
+        <Button
+          variant="default"
+          className="hover:bg-red-400"
+          onClick={() => DeleteTask(Task)}
+        >
+          {isDeleting ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Trash2 className="h-4 w-4" />
+          )}
+        </Button>
+      </div>
+      <div className="flex justify-center items-center md:hidden ">
+        <div
+          className={`h-3 w-3 rounded-full mr-3 ${
+            Task.isActive ? "bg-green-500" : "bg-red-500"
+          }`}
+        ></div>
+        {!Task.isActive && (
+          <Button
+            variant="default"
+            className="hover:bg-green-800 mr-2 md:hidden "
+            onClick={() => ReactivateTask(Task)}
+          >
+            {isReactivating ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <LoopIcon className="h-4 w-4" />
+            )}
+          </Button>
+        )}
+        <Button
+          variant="default"
+          className="hover:bg-red-400 md:hidden"
+          onClick={() => DeleteTask(Task)}
+        >
+          {isDeleting ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Trash2 className="h-4 w-4" />
+          )}
+        </Button>
       </div>
     </div>
   );
@@ -220,8 +256,10 @@ const TaskLogs = ({
                       log.isSuccess ? "text-green-500" : "text-red-300"
                     )}
                   >
-                    <span className="font-medium">{formatTime(log.time)} </span>
-                    -- {log.logResponse} -- {log.respCode}
+                    <span className="font-medium">
+                      [ {convertTo24HourFormat(log.time)} ]
+                    </span>{" "}
+                    - {log.logResponse} - {log.respCode}
                   </li>
                 ))}
               </ul>
@@ -260,9 +298,7 @@ const MobileMenu = ({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onSelect={() => ReactivateTask(Task)}>
-          {!Task.isActive ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
+          {!Task.isActive && (
             <>
               <LoopIcon className="mr-2 h-4 w-4" />
               Reactivate

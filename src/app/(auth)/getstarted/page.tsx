@@ -18,7 +18,6 @@ export default function ProductSignIn() {
   const [isHovering, setIsHovering] = useState(false);
 
   const handleGoogleSignIn = () => {
-    console.log("Google Sign-In clicked");
     signIn("google");
   };
 
