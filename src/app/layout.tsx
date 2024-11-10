@@ -30,7 +30,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} `}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} px-2 md:px-0`}
+      >
         <Providers>
           <ThemeProvider>
             <Navbar />

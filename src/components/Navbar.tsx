@@ -8,7 +8,6 @@ import {
 } from "framer-motion";
 import { Zap } from "lucide-react";
 import { useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { Navlogin } from "./Navlogin";

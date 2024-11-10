@@ -28,7 +28,9 @@ export const Navlogin = () => {
       <Button
         variant={"default"}
         className="text-white bg-transparent hover:bg-transparent px-0"
-        onClick={() => signIn("google")}
+        onClick={() => {
+          window.location.href = "/getstarted";
+        }}
       >
         Login
       </Button>

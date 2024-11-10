@@ -59,7 +59,12 @@ export const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
         >
-          <Button className="w-full text-lg py-6 bg-white text-black hover:bg-gray-200 transition-colors group">
+          <Button
+            className="w-full text-lg py-6 bg-white text-black hover:bg-gray-200 transition-colors group"
+            onClick={() => {
+              window.location.href = "/getstarted";
+            }}
+          >
             <motion.div
               className="mr-2 h-5 w-5"
               initial={{ y: 0 }}
