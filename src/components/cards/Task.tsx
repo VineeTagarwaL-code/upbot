@@ -31,18 +31,41 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LoopIcon } from "@radix-ui/react-icons";
-import { reactivateTask } from "@/app/actions/task";
+import { deleteTask, reactivateTask } from "@/app/actions/task";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 
 export function TaskCard({ Task }: { Task: PingTask }) {
   const [selectedTask, setSelectedTask] = useState<PingTask | null>(null);
   const [isReactivating, setIsReactivating] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const toggleTaskDetails = (task: PingTask) => {
     setSelectedTask(selectedTask && selectedTask.ID === task.ID ? null : task);
   };
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  const DeleteTask = async (Task: PingTask) => {
+    try {
+      setIsDeleting(true);
+      const response = await deleteTask({ taskId: Task.ID });
+
+      if (response) {
+        toast({
+          title: "Task deleted successfully",
+          description: "Task will no longer ping",
+        });
+        await queryClient.invalidateQueries({ queryKey: ["pingTask"] });
+      }
+    } catch (err) {
+      toast({
+        title: "Failed to delete task",
+        description: "Please try again later",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
   const ReactivateTask = async (Task: PingTask) => {
     try {
       setIsReactivating(true);
@@ -115,8 +138,16 @@ export function TaskCard({ Task }: { Task: PingTask }) {
                       <ChevronDown />
                     )}
                   </Button>
-                  <Button variant="default" className="hover:bg-red-400">
-                    <Trash2 className="h-4 w-4" />
+                  <Button
+                    variant="default"
+                    className="hover:bg-red-400"
+                    onClick={() => DeleteTask(Task)}
+                  >
+                    {isDeleting ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="h-4 w-4" />
+                    )}
                   </Button>
                 </div>
                 <DropdownMenu>
@@ -127,6 +158,14 @@ export function TaskCard({ Task }: { Task: PingTask }) {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
+                    <DropdownMenuItem onSelect={() => ReactivateTask(Task)}>
+                      {!Task.isActive && (
+                        <>
+                          <LoopIcon className="mr-2 h-4 w-4" />
+                          Reactivate
+                        </>
+                      )}
+                    </DropdownMenuItem>
                     <DropdownMenuItem onSelect={() => toggleTaskDetails(Task)}>
                       {selectedTask && selectedTask.ID === Task.ID ? (
                         <>
@@ -140,7 +179,7 @@ export function TaskCard({ Task }: { Task: PingTask }) {
                         </>
                       )}
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => DeleteTask(Task)}>
                       <Trash2Icon className="mr-2 h-4 w-4" />
                       Delete
                     </DropdownMenuItem>

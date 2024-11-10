@@ -12,11 +12,14 @@ export const TaskContainer = () => {
 
   if (isLoading) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 w-[80%]">
         {Array(5)
           .fill(0)
           .map((_, index) => (
-            <Skeleton className="h-12 w-full bg-foreground" key={index} />
+            <Skeleton
+              className="h-12  bg-muted-foreground rounded-xl"
+              key={index}
+            />
           ))}
       </div>
     );
@@ -28,7 +31,7 @@ export const TaskContainer = () => {
   return (
     <div className="w-[80%] flex justify-center items-start flex-col gap-3">
       {data?.additional.pings.map((task: PingTask) => {
-        return <TaskCard key={task.id} Task={task} />;
+        return <TaskCard key={task.ID} Task={task} />;
       })}
     </div>
   );

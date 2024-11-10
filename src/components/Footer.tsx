@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const Footer = () => {
   return (
-    <footer className=" text-gray-400 py-6 text-center flex justify-between items-center">
+    <footer className=" text-gray-400 py-6 text-center flex flex-col sm:flex-row justify-between items-center max-w-6xl mx-auto">
       <div className="text-sm mb-4">© 2024 upbot.vineet.tech</div>
       <div className="flex justify-center gap-8">
         <Link

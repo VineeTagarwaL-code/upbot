@@ -35,12 +35,6 @@ const getPings = withServerActionAsyncCatcher(async () => {
   return actionResponse.serialize();
 });
 
-async function deleteTasks(url: string) {
-  try {
-  } catch (err) {
-    console.log(err);
-  }
-}
 type AddTaskArgs = {
   url: string;
   discordUrl?: string;
@@ -112,7 +106,38 @@ const reactivateTask = async ({ taskId }: { taskId: number }) => {
     return res.serialize();
   } catch (err: any) {
     console.log(err);
+    return null;
   }
 };
 
-export { getPings, addTasks, deleteTasks, reactivateTask };
+const deleteTask = async ({ taskId }: { taskId: number }) => {
+  try {
+    const user = await getUser();
+    if (!user || !taskId) {
+      throw new Error("Failed to add task");
+    }
+    const response = await axios.delete(
+      `${process.env.BACKEND_URL}/ping/delete`,
+      {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+        data: {
+          taskId: taskId,
+        },
+      }
+    );
+
+    const res = new SuccessResponse(
+      "Task deleted successfully",
+      200,
+      response.data
+    );
+    return res.serialize();
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+
+export { getPings, addTasks, deleteTask, reactivateTask };
