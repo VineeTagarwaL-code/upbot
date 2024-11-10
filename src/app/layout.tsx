@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import Script from "next/script";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -41,6 +42,11 @@ export default function RootLayout({
           </ThemeProvider>
           <Toaster />
         </Providers>
+        <Script
+          defer
+          src="https://unmani-vercel.vercel.app/script.js"
+          data-website-id="94988ed9-5596-4612-9537-22e3915e4fca"
+        ></Script>
       </body>
     </html>
   );
