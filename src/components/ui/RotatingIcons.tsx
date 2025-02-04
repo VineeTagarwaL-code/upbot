@@ -1,14 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-
-import {
-  GitHubLogoIcon,
-  NotionLogoIcon,
-  TwitterLogoIcon,
-} from "@radix-ui/react-icons";
-
-import Discord from "/assets/discord.svg";
 import Image from "next/image";
 import { Zap } from "lucide-react";
 

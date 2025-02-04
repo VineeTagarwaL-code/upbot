@@ -1,14 +1,4 @@
-import {
-  Zap,
-  Search,
-  MessageCircle,
-  Layout,
-  Bookmark,
-  Pen,
-  Bell,
-  Clock,
-  Shield,
-} from "lucide-react";
+import { Zap, Bell, Shield } from "lucide-react";
 
 export default function Features() {
   const features = [

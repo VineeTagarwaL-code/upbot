@@ -1,40 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Trash2,
-  ChevronDown,
-  ChevronUp,
-  Menu,
-  Eye,
-  Trash2Icon,
-  EyeOffIcon,
-  Loader2,
-} from "lucide-react";
+import { Trash2, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-
 import { PingTask } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  GetLastPingTime,
-  cn,
-  convertTo24HourFormat,
-  formatTime,
-} from "@/lib/utils";
+import { GetLastPingTime, cn, convertTo24HourFormat } from "@/lib/utils";
 import Link from "next/link";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { LoopIcon } from "@radix-ui/react-icons";
 import { deleteTask, reactivateTask } from "@/app/actions/task";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
-import { url } from "inspector";
 
 export function TaskCard({ Task }: { Task: PingTask }) {
   const [selectedTask, setSelectedTask] = useState<PingTask | null>(null);
@@ -149,9 +126,7 @@ const TaskHeader = ({
       </div>
       <div className="hidden md:flex space-x-2 items-center">
         <div
-          className={`h-3 w-3 rounded-full mr-3 ${
-            Task.isActive ? "bg-green-500" : "bg-red-500"
-          }`}
+          className={`h-3 w-3 rounded-full mr-3 ${Task.isActive ? "bg-green-500" : "bg-red-500"}`}
         ></div>
 
         {!Task.isActive && (
@@ -192,9 +167,7 @@ const TaskHeader = ({
       </div>
       <div className="flex justify-center items-center md:hidden ">
         <div
-          className={`h-3 w-3 rounded-full mr-3 ${
-            Task.isActive ? "bg-green-500" : "bg-red-500"
-          }`}
+          className={`h-3 w-3 rounded-full mr-3 ${Task.isActive ? "bg-green-500" : "bg-red-500"}`}
         ></div>
         {!Task.isActive && (
           <Button
@@ -268,61 +241,5 @@ const TaskLogs = ({
         </motion.div>
       )}
     </AnimatePresence>
-  );
-};
-
-const MobileMenu = ({
-  Task,
-  selectedTask,
-  ReactivateTask,
-  toggleTaskDetails,
-  DeleteTask,
-}: {
-  Task: PingTask;
-  selectedTask: PingTask | null;
-  ReactivateTask: (task: PingTask) => void;
-  toggleTaskDetails: (task: PingTask) => void;
-  DeleteTask: (task: PingTask) => void;
-}) => {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="bg-transparent md:hidden"
-        >
-          <Menu className="h-5 w-5" />
-          <span className="sr-only">Open menu</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onSelect={() => ReactivateTask(Task)}>
-          {!Task.isActive && (
-            <>
-              <LoopIcon className="mr-2 h-4 w-4" />
-              Reactivate
-            </>
-          )}
-        </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => toggleTaskDetails(Task)}>
-          {selectedTask && selectedTask.ID === Task.ID ? (
-            <>
-              <EyeOffIcon className="mr-2 h-4 w-4" />
-              Close Logs
-            </>
-          ) : (
-            <>
-              <Eye className="mr-2 h-4 w-4" />
-              View Logs
-            </>
-          )}
-        </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => DeleteTask(Task)}>
-          <Trash2Icon className="mr-2 h-4 w-4" />
-          Delete
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
   );
 };

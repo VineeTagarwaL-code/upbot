@@ -1,21 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import Image from "next/image";
-import { useSession, signOut } from "next-auth/react";
-import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 export const Navlogin = () => {
   const { data: session, status } = useSession();
-  const [open, setOpen] = useState(false);
 
   if (status === "loading") {
     return (

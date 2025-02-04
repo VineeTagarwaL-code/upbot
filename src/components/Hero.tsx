@@ -1,10 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Coffee, Twitter, Zap } from "lucide-react";
+import { ArrowRight, Coffee, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import { HoverBorderGradient } from "./ui/HoverBorderGradient";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import GridPattern from "./ui/grid-pattern";
-import { cn } from "@/lib/utils";
 
 const Scale = {
   initial: {

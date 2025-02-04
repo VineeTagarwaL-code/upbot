@@ -12,7 +12,7 @@ export interface AnimatedListProps {
 export const AnimatedList = React.memo(
   ({ className, children, delay = 1000 }: AnimatedListProps) => {
     const [index, setIndex] = useState(0);
-    const childrenArray = React.Children.toArray(children);
+    const childrenArray = useMemo(() => React.Children.toArray(children), [children]);
 
     useEffect(() => {
       const interval = setInterval(() => {
