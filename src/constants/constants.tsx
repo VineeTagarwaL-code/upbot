@@ -4,11 +4,11 @@ type NavbarType = {
 }[];
 export const NAVBAR: NavbarType = [
   {
-    link: "https://upbot.vineet.tech/",
+    link: "https://upbot.vineet.pro/",
     title: "Home",
   },
   {
-    link: "https://upbot.vineet.tech/#features",
+    link: "https://upbot.vineet.pro/#features",
     title: "Features",
   },
   {
