@@ -6,10 +6,9 @@ import {
   useScroll,
   motion,
 } from "framer-motion";
-import { House, Logs, Zap, ZapIcon } from "lucide-react";
+import { House, Logs, Zap } from "lucide-react";
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { Navlogin } from "./Navlogin";
 import { cn } from "@/lib/utils";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
@@ -147,7 +146,6 @@ type Position = {
   opacity: number;
 };
 const SlideNavTabs = () => {
-  const { data: session, status } = useSession();
   const [position, setPosition] = useState<Position>({
     left: 0,
     width: 0,

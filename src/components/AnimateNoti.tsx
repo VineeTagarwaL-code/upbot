@@ -3,7 +3,6 @@
 import { cn } from "@/lib/utils";
 import { AnimatedList } from "./ui/animated-list";
 import Image from "next/image";
-import { Bell, Link, Zap } from "lucide-react";
 
 interface Item {
   name: string;
@@ -69,28 +68,7 @@ let notifications = [
   },
 ];
 
-const features = [
-  {
-    icon: <Zap />,
-    title: "One Step Setup",
-    description: "Just add one URL and you are all set",
-    color: "bg-gradient-to-br from-yellow-400 to-orange-500",
-  },
-  {
-    icon: <Bell />,
-    title: "Flexible Notifications",
-    description: "Get notified via Gmail or Discord, your choice",
-    color: "bg-gradient-to-br from-blue-400 to-indigo-500",
-  },
-  {
-    icon: <Link />,
-    title: "Regular Monitoring",
-    description: "We ping your server or app every 10 minutes",
-    color: "bg-gradient-to-br from-green-400 to-emerald-500",
-  },
-];
-
-notifications = Array.from({ length: 10 }, () => notifications).flat();
+notifications = Array.from({ length: 5 }, () => notifications).flat();
 
 const Notification = ({ name, description, icon, time }: Item) => {
   return (

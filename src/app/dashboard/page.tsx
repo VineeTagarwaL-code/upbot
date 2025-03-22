@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { TaskContainer } from "@/components/TaskContainer";
-import { LogOut, Menu, Plus } from "lucide-react";
+import { LogOut, Plus } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { SectionWrapper } from "@/components/Section-wrapper";
@@ -34,12 +34,7 @@ export default function Dashboard() {
 
 function DashboardHeader() {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [isLoggingOut, setIsLoggingOut] = React.useState(false);
-  const handleLogout = () => {
-    setIsLoggingOut(true);
-    signOut();
-    setIsLoggingOut(false);
-  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
